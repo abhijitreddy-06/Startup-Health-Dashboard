@@ -1,14 +1,10 @@
-// This event listener ensures the script runs after the HTML document is fully loaded.
 document.addEventListener('DOMContentLoaded', () => {
-    // --- CONFIGURATION ---
     const API_BASE_URL = 'http://localhost:5000/api';
 
-    // --- DOM ELEMENT REFERENCES ---
     const chartDiv = document.getElementById('fundingChart');
     const predictionForm = document.getElementById('prediction-form');
     const predictionResultDiv = document.getElementById('prediction-result');
 
-    // --- FUNCTION TO RENDER THE BAR CHART ---
     const renderStartupChart = (data) => {
         const states = data.map(d => d.state);
         const startupCounts = data.map(d => d.startup_count);
@@ -26,16 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
             yaxis: { title: 'Number of Startups' }
         };
 
-        Plotly.newPlot(chartDiv, plotData, layout);
+        // The {responsive: true} config helps Plotly adapt
+        Plotly.newPlot(chartDiv, plotData, layout, { responsive: true });
     };
 
-    // --- FUNCTION TO FETCH INITIAL DATA FOR THE CHART ---
     const fetchDashboardData = async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/stats-by-state`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
             renderStartupChart(data);
         } catch (error) {
@@ -44,18 +38,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- FUNCTION TO HANDLE THE PREDICTION FORM SUBMISSION ---
     const handlePrediction = async (event) => {
-        // Prevent the browser from reloading the page
         event.preventDefault();
 
         predictionResultDiv.textContent = 'Predicting...';
         predictionResultDiv.style.color = '#333';
+        predictionResultDiv.style.background = 'transparent';
 
-        // This object creates the JSON payload.
-        // The keys ('year', 'state', 'industry') MUST exactly match what the ML model was trained on.
         const formData = {
-            year: parseInt(document.getElementById('founding_year').value),
+            year: parseInt(document.getElementById('year').value),
             state: document.getElementById('state').value,
             industry: document.getElementById('sector').value
         };
@@ -63,22 +54,19 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch(`${API_BASE_URL}/predict`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
             const result = await response.json();
 
             if (result.predicted_count !== undefined) {
                 const count = Math.round(result.predicted_count);
                 predictionResultDiv.textContent = `Predicted Startup Count: ${count}`;
-                predictionResultDiv.style.color = 'green';
+                predictionResultDiv.style.color = '#155724'; // Dark green
+                predictionResultDiv.style.backgroundColor = '#d4edda'; // Light green
             } else {
                 throw new Error(result.error || 'Prediction failed.');
             }
@@ -86,13 +74,19 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Prediction request failed:', error);
             predictionResultDiv.textContent = 'Error making prediction.';
-            predictionResultDiv.style.color = 'red';
+            predictionResultDiv.style.color = '#721c24'; // Dark red
+            predictionResultDiv.style.backgroundColor = '#f8d7da'; // Light red
         }
     };
 
-    // --- INITIALIZE THE DASHBOARD ---
-    // Fetch data for the chart when the page loads.
+    // --- INITIALIZE ---
     fetchDashboardData();
-    // Listen for the form to be submitted.
     predictionForm.addEventListener('submit', handlePrediction);
+
+    // --- RESPONSIVENESS ---
+    // Make the Plotly chart resize when the window size changes.
+    // This is a fallback in case the {responsive: true} config isn't enough.
+    window.addEventListener('resize', () => {
+        Plotly.Plots.resize(chartDiv);
+    });
 });
