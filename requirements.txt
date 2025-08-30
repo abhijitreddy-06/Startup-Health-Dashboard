@@ -1,0 +1,9 @@
+pandas
+numpy
+scikit-learn
+joblib
+flask
+psycopg2-binary
+plotly
+matplotlib
+python-dotenv

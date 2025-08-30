@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Startup Health Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🇮🇳 State Startup Health Dashboard</h1>
+        </header>
+
+        <main>
+            <section class="dashboard">
+                <h2>State-wise Funding Comparison</h2>
+                <div id="fundingChart" class="chart"></div>
+            </section>
+
+            <section class="predictor">
+                <h2>Seed Funding Predictor</h2>
+                <p>Will this startup likely receive funding?</p>
+                <form id="prediction-form">
+                    <div class="form-group">
+                        <label for="founding_year">Founding Year</label>
+                        <input type="number" id="founding_year" value="2022" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input type="text" id="state" value="Karnataka" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sector">Sector</label>
+                        <input type="text" id="sector" value="Fintech" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobs_created">Jobs Created</label>
+                        <input type="number" id="jobs_created" value="10" required>
+                    </div>
+                    <button type="submit">Predict</button>
+                </form>
+                <div id="prediction-result"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
