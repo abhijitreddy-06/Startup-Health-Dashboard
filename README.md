@@ -103,58 +103,71 @@ Flask ML Service
 ### Installation
 
 1️⃣ **Clone the Repository**  
+## 🛠️ Installation & Setup
+
 ```bash
+# Clone the repository
 git clone https://github.com/your-username/startup-health-dashboard.git
 cd startup-health-dashboard
+
+# Setup PostgreSQL Database
 CREATE DATABASE startup_dashboard_db;
 \c startup_dashboard_db
 \i sql/schema.sql
+
+# Setup Python environment
 python -m venv venv
-# Windows
+# On Windows
 venv\Scripts\activate
 pip install -r requirements.txt
-src/etl/etl_pipeline.py
+
+# Run ETL pipeline and train model
 python src/etl/etl_pipeline.py
 python src/ml_service/model_train.py
+
+# Setup Node.js API
 cd src/express_api
 npm install
-src/express_api/routes/api.js
-🏃 Running the Application
 
+⚙️ Make sure to update database credentials in:
+
+src/etl/etl_pipeline.py (Python service)
+
+src/express_api/routes/api.js (Node.js API)
+
+🏃 Running the Application
 Terminal 1 – ML Service
 
 cd src/ml_service
 venv\Scripts\activate
 python app.py
 
-
 ➡️ Runs at: http://localhost:5001
 
 Terminal 2 – Node.js API
-
 cd src/express_api
 npm start
-
 
 ➡️ Runs at: http://localhost:5000
 
 Open Dashboard → http://localhost:5000
 
+
 🧠 ML Model Insights
 
 Model: Random Forest Regressor
 
-Objective: Predict startup counts (2016–2025).
+Objective: Predict startup counts (2016–2025)
 
 Features: year, state, industry
 
-Performance: MAE ≈ 8.06 startups.
+Performance: MAE ≈ 8.06 startups
 
 Behavior:
 
-✅ Accurate interpolation within 2016–2025.
+✅ Accurate interpolation within 2016–2025
 
-⚠️ Cannot extrapolate beyond 2025 → predictions flatten.
+⚠️ Cannot extrapolate beyond 2025 → predictions flatten
 
 🤝 Contributing
 
@@ -167,9 +180,3 @@ Create your branch (feature/xyz)
 Commit changes
 
 Open a Pull Request
-
-📜 License
-
-Distributed under the MIT License. See LICENSE for details.
-
-<div align="center"> ✨ Built with ❤️ by [Your Name] ✨ </div> ```
