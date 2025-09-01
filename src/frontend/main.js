@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             yaxis: { title: 'Number of Startups' }
         };
 
-        // The {responsive: true} config helps Plotly adapt
+      
         Plotly.newPlot(chartDiv, plotData, layout, { responsive: true });
     };
 
@@ -65,8 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.predicted_count !== undefined) {
                 const count = Math.round(result.predicted_count);
                 predictionResultDiv.textContent = `Predicted Startup Count: ${count}`;
-                predictionResultDiv.style.color = '#155724'; // Dark green
-                predictionResultDiv.style.backgroundColor = '#d4edda'; // Light green
+                predictionResultDiv.style.color = '#155724';
+                predictionResultDiv.style.backgroundColor = '#d4edda'; 
             } else {
                 throw new Error(result.error || 'Prediction failed.');
             }
@@ -74,18 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Prediction request failed:', error);
             predictionResultDiv.textContent = 'Error making prediction.';
-            predictionResultDiv.style.color = '#721c24'; // Dark red
-            predictionResultDiv.style.backgroundColor = '#f8d7da'; // Light red
+            predictionResultDiv.style.color = '#721c24'; 
+            predictionResultDiv.style.backgroundColor = '#f8d7da'; 
         }
     };
 
-    // --- INITIALIZE ---
+  
     fetchDashboardData();
     predictionForm.addEventListener('submit', handlePrediction);
-
-    // --- RESPONSIVENESS ---
-    // Make the Plotly chart resize when the window size changes.
-    // This is a fallback in case the {responsive: true} config isn't enough.
     window.addEventListener('resize', () => {
         Plotly.Plots.resize(chartDiv);
     });
